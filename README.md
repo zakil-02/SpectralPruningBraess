@@ -2,7 +2,7 @@
 This is the code base for our recently proposed spectral based graph rewiring for mitigating both oversquashing and oversmoothing.
 
 
-![a.pdf](a.pdf)
+![BraessRing](BraessRing.jpg)
 
 
 
@@ -11,6 +11,10 @@ This is the code base for our recently proposed spectral based graph rewiring fo
 
 
 
+
+
+
+Special thanks to my collaborator [Celia](https://github.com/celrm) for the ring diagrams :P.
 
 
 
