@@ -2,7 +2,8 @@
 import numpy as np
 import networkx as nx
 
-
+#### Informativeness measures taken from - 
+###Characterizing Graph Datasets for Node Classification: Homophily-Heterophily Dichotomy and Beyond, Platonov et al.###
 
 
 
