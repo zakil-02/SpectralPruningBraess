@@ -2,6 +2,18 @@
 This is the code base for our recently proposed spectral based graph rewiring for mitigating both oversquashing and oversmoothing.
 
 
+![a.pdf](a.pdf)
+
+
+
+
+
+
+
+
+
+
+
 Requirements
 
 ```
