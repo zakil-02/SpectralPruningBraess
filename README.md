@@ -38,9 +38,11 @@ Supports -
 2. Rewiring using FoSR. Adds edges to maximize spectral gap. (https://github.com/kedar2/FoSR)
 3. Rewiring using SDRF. Rewires the graph based on discrete Ricci curvature. (https://github.com/jctops/understanding-oversquashing)
 
-For experiments on larger heterophilic datasets - use the code base from - https://github.com/yandex-research/heterophilous-graphs requires DGL. Change the datasets.py to include the rewiring scheme.
+For experiments on larger heterophilic datasets - use the code base from - https://github.com/yandex-research/heterophilous-graphs (requires DGL). Change the datasets.py to include the rewiring scheme.
 
 For experiments on long range graphbenchmark - use the code base from - https://github.com/toenshoff/LRGB 
+
+We also provide the modified graphs in the .pt format, which can be loaded directly for training. Use the ```--existing_graph 'path/to/file' ``` while running the code.
 
 
 
