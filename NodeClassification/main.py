@@ -3,38 +3,6 @@ warnings.filterwarnings('ignore')
 import argparse
 import sys
 import os
-######### Hyperparams to use #############
-#Cora --> Dropout = 0.4130296 ; LR = 0.01 ; Hidden_Dimension = 32
-#Citeseer --> Dropout = 0.3130296 ; LR = 0.01 ; Hidden_Dimension = 32
-#Pubmed --> Dropout = 0.4130296 ; LR = 0.01 ; Hidden_Dimension = 32
-# Cornell = 0.4130296,0.001, 128
-# Wisconsin = 0.5130296, 0.001,128
-# Texas = 0.4130296,0.001,128
-# Actor = 0.2130296,0.01,128
-# ChameleonFiltered = 0.2130296,0.01,128
-# ChameleonFilteredDirected = 0.4130296,0.01,128
-# SquirrelFiltered = 0.5130296,0.01,128
-# SquirrelFilteredDirected = 0.2130296,0.01,128
-########################################
-
-
-
-parser = argparse.ArgumentParser(description='Run NodeClassification+Rewiring script')
-parser.add_argument('--method', type=str, help='Max/Min/Add/Delete/FoSR/SDRF')
-parser.add_argument('--dataset', type=str, help='Dataset to download')
-parser.add_argument('--num_layers', type=int, default=2, help='Number of layers in GCN')
-parser.add_argument('--existing_graph', type=str,default=None, help='.pt file')
-parser.add_argument('--out', type=str, help='name of log file')
-parser.add_argument('--max_iters', type=int, default=10, help='maximum number of edge change iterations')
-#parser.add_argument('--removal_bound', type=float, default=0.95, help='removal bound for SDRF')
-#parser.add_argument('--tau', type=int, default=163, help='Temperature for SDRF')
-parser.add_argument('--update_period', type=int, default=1, help='Times to recalculate criterion')
-parser.add_argument('--dropout', type=float, default=0.3130296, help='Dropout = [Cora - 0.4130296, Citeseer - 0.3130296]')
-parser.add_argument('--hidden_dimension', type=int, default=32, help='Hidden Dimension size')
-parser.add_argument('--LR', type=float, default=0.01, help='Learning Rate = [0.01,0.001]')
-parser.add_argument('--device',type=str,default='cpu')
-args = parser.parse_args()
-
 
 import torch
 import torch.nn.functional as F
@@ -58,6 +26,40 @@ import pickle
 import time
 import csv
 
+
+######### Hyperparams to use #############
+#Cora --> Dropout = 0.4130296 ; LR = 0.01 ; Hidden_Dimension = 32
+#Citeseer --> Dropout = 0.3130296 ; LR = 0.01 ; Hidden_Dimension = 32
+#Pubmed --> Dropout = 0.4130296 ; LR = 0.01 ; Hidden_Dimension = 32
+# Cornell = 0.4130296,0.001, 128
+# Wisconsin = 0.5130296, 0.001,128
+# Texas = 0.4130296,0.001,128
+# Actor = 0.2130296,0.01,128
+# ChameleonFiltered = 0.2130296,0.01,128
+# ChameleonFilteredDirected = 0.4130296,0.01,128
+# SquirrelFiltered = 0.5130296,0.01,128
+# SquirrelFilteredDirected = 0.2130296,0.01,128
+########################################
+
+parser = argparse.ArgumentParser(description='Run NodeClassification+Rewiring script')
+parser.add_argument('--method', type=str, help='Max/Min/Add/Delete/FoSR/SDRF')
+parser.add_argument('--dataset', type=str, help='Dataset to download')
+parser.add_argument('--num_layers', type=int, default=2, help='Number of layers in GCN')
+parser.add_argument('--existing_graph', type=str,default=None, help='.pt file')
+parser.add_argument('--out', type=str, help='name of log file')
+parser.add_argument('--max_iters', type=int, default=10, help='maximum number of edge change iterations')
+#parser.add_argument('--removal_bound', type=float, default=0.95, help='removal bound for SDRF')
+#parser.add_argument('--tau', type=int, default=163, help='Temperature for SDRF')
+parser.add_argument('--update_period', type=int, default=1, help='Times to recalculate criterion')
+parser.add_argument('--dropout', type=float, default=0.3130296, help='Dropout = [Cora - 0.4130296, Citeseer - 0.3130296]')
+parser.add_argument('--hidden_dimension', type=int, default=32, help='Hidden Dimension size')
+parser.add_argument('--LR', type=float, default=0.01, help='Learning Rate = [0.01,0.001]')
+parser.add_argument('--device',type=str,default='cpu')
+args = parser.parse_args()
+
+
+
+
 device = torch.device(args.device)
 filename = args.out
 graphfile = args.existing_graph
@@ -77,7 +79,35 @@ planetoid_val_seeds =   [3164711608, 3255599240, 894959334,  493067366,  3349051
 het_val_seeds = [3164711608,894959334,2487307261,3349051410,493067366]
 
 print(f"Loading the dataset...")
-data, num_classes,num_features = load_data(args.dataset)
+if args.datasets in ['Cora','Citeseer','Pubmed']:
+    data, num_classes,num_features = load_data(args.dataset)
+
+else :
+      path = 'heterophilous-graphs/data/'
+      filepath = os.path.join(path, args.dataset)
+      data = np.load(filepath)
+      print("Converting to PyG dataset...")
+      x = torch.tensor(data['node_features'], dtype=torch.float)
+      y = torch.tensor(data['node_labels'], dtype=torch.long)
+      edge_index = torch.tensor(data['edges'], dtype=torch.long).t().contiguous()
+      train_mask = torch.tensor(data['train_masks'], dtype=torch.bool).transpose(0, 1).contiguous()
+      val_mask = torch.tensor(data['val_masks'], dtype=torch.bool).transpose(0, 1).contiguous()
+      test_mask = torch.tensor(data['test_masks'], dtype=torch.bool).transpose(0, 1).contiguous()
+      num_classes = len(torch.unique(y))
+      num_targets = 1 if num_classes == 2 else num_classes
+      data = Data(x=x, edge_index=edge_index)
+      data.y = y
+      data.num_classes = num_classes
+      data.num_targets = num_targets
+      data.train_mask = train_mask
+      data.val_mask = val_mask
+      data.test_mask = test_mask
+      print("Done!..")
+      print(f"Selecting the LargestConnectedComponent..")
+      transform = LargestConnectedComponents()
+      data = transform(data)
+      num_features = data.num_features
+      num_classes = data.num_classes
 datasetname, _ = os.path.splitext(args.dataset)
 print(data)
 print()
@@ -98,6 +128,11 @@ print()
 if os.path.exists(graphfile):
   print("Loading graph from .pt file...")
   data = torch.load(graphfile)
+  nxgraph = to_networkx(data, to_undirected=True)
+  print(nxgraph)
+  fgap, _, _, _ = spectral_gap(nxgraph)
+  print(f"FinalGap = {fgap}")
+  print()
 
 else:
   print("Graph does not exist...")
@@ -227,17 +262,15 @@ for split_idx in range(1,10):
                 trainacclist.append(train_acc*100)
                 avg_testacc.append(test_acc*100)
                 print(f'Val Accuracy : {val_acc:.2f}, Test Accuracy: {test_acc:.2f} for seed',seeds)
-      #print(f'Final test accuracy of all seeds {np.mean(avg_testacc):.2f} \u00B1 {np.std(avg_testacc):.2f}' )
-      #print(f'Final train accuracy of all seeds {np.mean(trainacclist):.2f} \u00B1 {np.std(trainacclist):.2f}' )
       avg_acc_testallsplits.append(np.mean(avg_testacc))
       trainallsplits.append(np.mean(trainacclist))
 print(f'Final test accuracy of all splits {np.mean(avg_acc_testallsplits):.2f} \u00B1 {np.std(avg_acc_testallsplits):.2f}')
 print(f'Final train accuracy of all splits {np.mean(trainallsplits):.2f} \u00B1 {np.std(trainallsplits):.2f}')
 gcn_time = (f"GCN Training Time After Adding -- {end_gcn - start_gcn}")
 print()  
-headers = ['Method','Dataset','NumLayers','EdgesModified','UpdatePeriod','LR','Dropout','HiddenDimension','AvgTrainingAcc','Deviation','AvgTestAcc', 'Deviation', 'ModifyingTime','GCNTrainingTime']
+headers = ['Method','Dataset','NumLayers','InitialGap','NLIBefore','AdjHomBefore','EdgesModified','UpdatePeriod','FinalGap','NLIAfter','AdjHomAfter','LR','Dropout','HiddenDimension','AvgTrainingAcc','Deviation','AvgTestAcc', 'Deviation', 'ModifyingTime','GCNTrainingTime']
 with open(filename, mode='a', newline='') as file:
               writer = csv.writer(file)
               if file.tell() == 0:
                       writer.writerow(headers)
-              writer.writerow([args.method,args.dataset,args.num_layers,max_iterations*update_period,update_period,lr,p,hidden_channel,np.mean(trainallsplits),np.std(trainallsplits),np.mean(avg_acc_testallsplits), np.std(avg_acc_testallsplits), data_modifying,gcn_time])
+              writer.writerow([args.method,args.dataset,args.num_layers,initialgap,nodelibef,hadjbef,max_iterations*update_period,update_period,fgap,nodeliaf,hadjaf,lr,p,hidden_channel,np.mean(trainallsplits),np.std(trainallsplits),np.mean(avg_acc_testallsplits), np.std(avg_acc_testallsplits), data_modifying,gcn_time])
