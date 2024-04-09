@@ -4,6 +4,8 @@ import scipy.sparse as sp
 import numpy as np
 from tqdm import tqdm
 import random
+random.seed(42)
+np.random.seed(42)
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -48,7 +50,6 @@ def rank_by(g, gap, vecs, score_method, add_or_delete):
     """
     if add_or_delete == "add": 
         edges = list(nx.non_edges(g))
-        edges = random.sample(edges,1500)
     elif add_or_delete == "delete": # all edges without self-loops
         edges = list(g.edges - nx.selfloop_edges(g))
     else:
