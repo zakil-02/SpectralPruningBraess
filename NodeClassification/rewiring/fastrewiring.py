@@ -4,6 +4,9 @@ import scipy.sparse as sp
 import numpy as np
 from tqdm import tqdm
 import warnings
+import random
+random.seed(42)
+np.random.seed(42)
 warnings.filterwarnings('ignore')
 
 from spectral_utils import *
