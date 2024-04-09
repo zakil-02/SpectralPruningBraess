@@ -4,6 +4,8 @@ import scipy.sparse as sp
 import numpy as np
 from tqdm import tqdm
 import random
+random.seed(42)
+np.random.seed(42)
 import warnings
 warnings.filterwarnings('ignore')
 
