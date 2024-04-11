@@ -29,7 +29,7 @@ def proxydelmin(data, nxgraph, max_iterations):
     data.edge_index = torch.cat([newdata.edge_index]) 
     return data,fgap,data_modifying
 
-def proxydelmax(args,data, nxgraph, max_iterations):
+def proxydelmax(data, nxgraph, max_iterations):
       print("Deleting edges to maximize the gap...")
       start_algo = time.time()
       newgraph = process_and_update_edges(nxgraph, rank_by_proxy_delete, "proxydeletemax",max_iter=max_iterations,updating_period=1)
@@ -45,7 +45,7 @@ def proxydelmax(args,data, nxgraph, max_iterations):
       data.edge_index = torch.cat([newdata.edge_index])  
       return data,fgap,data_modifying
 
-def proxyaddmax(args,data, nxgraph, max_iterations):
+def proxyaddmax(data, nxgraph, max_iterations):
         print("Adding edges to maximize the gap...")
         start_algo = time.time()
         newgraph = process_and_update_edges(nxgraph, rank_by_proxy_add, "proxyaddmax",max_iter=max_iterations,updating_period=1)
@@ -62,7 +62,7 @@ def proxyaddmax(args,data, nxgraph, max_iterations):
         return data,fgap,data_modifying
 
 
-def proxyaddmin(args,data, nxgraph, max_iterations):
+def proxyaddmin(data, nxgraph, max_iterations):
         print("Adding edges to minimize the gap...")
         start_algo = time.time()
         newgraph = min_and_update_edges(nxgraph, rank_by_proxy_add_min, "proxyaddmin",max_iter=max_iterations,updating_period=1)
