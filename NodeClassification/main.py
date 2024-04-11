@@ -150,17 +150,17 @@ else:
       torch.save(data, f"{datasetname}_{args.method}_{args.max_iters}.pt")
 
   elif args.method == 'proxydelmax':
-      newdata,fgap,data_modifying = methods.proxydelmin(data, nxgraph, args.max_iters)
+      newdata,fgap,data_modifying = methods.proxydelmax(data, nxgraph, args.max_iters)
       data.edge_index = torch.cat([newdata.edge_index])
       torch.save(data, f"{datasetname}_{args.method}_{args.max_iters}.pt")
   
   elif args.method == 'proxyaddmax':
-      newdata,fgap,data_modifying = methods.proxydelmin(data, nxgraph, args.max_iters)
+      newdata,fgap,data_modifying = methods.proxyaddmax(data, nxgraph, args.max_iters)
       data.edge_index = torch.cat([newdata.edge_index])
       torch.save(data, f"{datasetname}_{args.method}_{args.max_iters}.pt")
   
   elif args.method == 'proxyaddmin':
-      newdata,fgap,data_modifying = methods.proxydelmin(data, nxgraph, args.max_iters)
+      newdata,fgap,data_modifying = methods.proxyaddmin(data, nxgraph, args.max_iters)
       data.edge_index = torch.cat([newdata.edge_index])
       torch.save(data, f"{datasetname}_{args.method}_{args.max_iters}.pt")
 
