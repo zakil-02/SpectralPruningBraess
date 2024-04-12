@@ -80,13 +80,37 @@ het_val_seeds = [3164711608,894959334,2487307261,3349051410,493067366]
 
 print(f"Loading the dataset...")
 
-data, num_classes,num_features = load_data(args.dataset)
+if args.dataset in ['Cora','CiteSeer','PubMed']:
+      data, num_classes,num_features = load_data(args.dataset)
+
+else :
+  path = 'heterophilous-graphs/data/'
+  filepath = os.path.join(path, args.dataset)
+  data = np.load(filepath)
+  print("Converting to PyG dataset...")
+  x = torch.tensor(data['node_features'], dtype=torch.float)
+  y = torch.tensor(data['node_labels'], dtype=torch.long)
+  edge_index = torch.tensor(data['edges'], dtype=torch.long).t().contiguous()
+  train_mask = torch.tensor(data['train_masks'], dtype=torch.bool).transpose(0, 1).contiguous()
+  val_mask = torch.tensor(data['val_masks'], dtype=torch.bool).transpose(0, 1).contiguous()
+  test_mask = torch.tensor(data['test_masks'], dtype=torch.bool).transpose(0, 1).contiguous()
+  num_classes = len(torch.unique(y))
+  num_targets = 1 if num_classes == 2 else num_classes
+  data = Data(x=x, edge_index=edge_index)
+  data.y = y
+  data.num_classes = num_classes
+  data.num_targets = num_targets
+  data.train_mask = train_mask
+  data.val_mask = val_mask
+  data.test_mask = test_mask
+  transform = LargestConnectedComponents()
+  data = transform(data)
+  print("Done!..")
+num_classes = data.num_classes
+num_features = data.num_features
 datasetname, _ = os.path.splitext(args.dataset)
 print(data)
 print()
-##=========================##=========================##=========================##=========================
-
-
 
 if os.path.exists(graphfile):
   print("Loading graph from .pt file...")
