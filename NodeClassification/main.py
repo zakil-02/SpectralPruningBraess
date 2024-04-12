@@ -3,6 +3,29 @@ warnings.filterwarnings('ignore')
 import argparse
 import sys
 import os
+import torch
+import torch.nn.functional as F
+from torch_geometric.nn import GCNConv
+from torch.nn import Linear
+from torch_geometric.datasets import TUDataset, Planetoid,WebKB,Actor, WikipediaNetwork
+from torch_geometric.transforms import NormalizeFeatures, LargestConnectedComponents
+from torch_geometric.utils import to_networkx,from_networkx,homophily
+from torch_geometric.transforms import RandomNodeSplit
+from model import GCN,GATv2
+import methods
+from rewiring import *
+from rewiring.spectral_utils import spectral_gap
+from dataloader import *
+from nodeli import *
+from tqdm import tqdm
+import networkx as nx
+import numpy as np
+import random
+import pickle
+import time
+import csv
+
+
 ######### Hyperparams to use #############
 #Cora --> Dropout = 0.4130296 ; LR = 0.01 ; Hidden_Dimension = 32
 #Citeseer --> Dropout = 0.3130296 ; LR = 0.01 ; Hidden_Dimension = 32
@@ -37,27 +60,8 @@ parser.add_argument('--device',type=str,default='cpu')
 args = parser.parse_args()
 
 
-import torch
-import torch.nn.functional as F
-from torch_geometric.nn import GCNConv
-from torch.nn import Linear
-from torch_geometric.datasets import TUDataset, Planetoid,WebKB,Actor, WikipediaNetwork
-from torch_geometric.transforms import NormalizeFeatures, LargestConnectedComponents
-from torch_geometric.utils import to_networkx,from_networkx,homophily
-from torch_geometric.transforms import RandomNodeSplit
-from model import GCN,GATv2
-import methods
-from rewiring import *
-from rewiring.spectral_utils import spectral_gap
-from dataloader import *
-from nodeli import *
-from tqdm import tqdm
-import networkx as nx
-import numpy as np
-import random
-import pickle
-import time
-import csv
+
+
 
 device = torch.device(args.device)
 filename = args.out
