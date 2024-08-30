@@ -201,11 +201,12 @@ elif args.model == 'GATv2':
 #model = GCN(num_features,num_classes,hidden_channel, num_layers=args.num_layers)
 model.to(device)
 print(model)
-optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=5e-4)
-criterion = torch.nn.CrossEntropyLoss()
+
 
 print()
 for split_idx in range(1,10):
+      optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=5e-4)
+      criterion = torch.nn.CrossEntropyLoss()
       print(f"Training for index = {split_idx}")
       train_mask = data.train_mask[:,split_idx]
       test_mask = data.test_mask[:,split_idx]
