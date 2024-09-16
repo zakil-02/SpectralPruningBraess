@@ -205,6 +205,7 @@ print(model)
 
 print()
 for split_idx in range(1,10):
+      model.reset_parameters()
       optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=5e-4)
       criterion = torch.nn.CrossEntropyLoss()
       print(f"Training for index = {split_idx}")
