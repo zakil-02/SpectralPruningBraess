@@ -11,7 +11,7 @@ Networkx
 To run the code -
 
 ```Python
-python main.py --dataset 'Cora' --method 'proxydelmin' --max_iters 50 --out 'Planetoid.csv' --existing_graph None
+python main.py --dataset 'Cora' --method 'proxydelmax' --max_iters 50 --out 'Planetoid.csv' --existing_graph None
 ```
 
 Supports -
