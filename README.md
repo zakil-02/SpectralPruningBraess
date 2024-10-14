@@ -1,4 +1,4 @@
-# Code base for Spectral Graph Pruning Against Over-squashing and Over-smoothing which is now accepted at NeurIPS 2024!
+# Code base for "Spectral Graph Pruning Against Over-squashing and Over-smoothing", which is now accepted at NeurIPS 2024!
 
 The basic requirements for reproducing results are listed below. Alternatively, we also provide the environment.yml for the exact environment requirements.
 
@@ -10,15 +10,18 @@ DGL == 2.1.0+cu118
 
 To run the code -
 
-```Python
-python main.py --dataset 'Cora' --method 'proxydelmax' --max_iters 50 --out 'Planetoid.csv' --existing_graph None
+```bash
+bash gen_spect.sh
 ```
+The NodeClassification/rewiring folder contains
 
-Supports -
-
-1. Rewiring using proxyaddmin,proxyaddmax,proxydelmin,proxydelmax. Add/Delete edges to either maximize or minimize the spectral gap.
-2. Rewiring using FoSR. Adds edges to maximize spectral gap.
-
+1. Proxyaddmax - add edges by maximizing proxy spectral gap.
+2. Proxyaddmin - add edges by minmizing proxy spectral gap.
+3. Proxydelmax - delete edges by maximizing proxy spectral gap.
+4. Proxydelmin - delete edges by maximizing proxy spectral gap.
+5. FoSR - add edges by maximizing first order approximation of spectral gap proposed in https://openreview.net/forum?id=3YjQfCLdrzz.
+   
+Datasets Cora,Citeseer,Pubmed are automatically downloaded from Pytorch-Geometric. Cornell,Texas,Wisconsin,Chameleon,Squirrel and Actor datasets we use the .npz files given here - https://github.com/yandex-research/heterophilous-graphs
 
 
 
