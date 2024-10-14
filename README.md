@@ -2,7 +2,7 @@
 
 We propose a computationally efficient proxy spectral gap based graph rewiring strategy inspired by the Braess Paradox to show we can alleviate both over-squashing and over-smoothing in graph neural networks!
 
-![]()
+![](https://github.com/AdarshMJ/SpectralPruningBraess/blob/main/BraessRing.jpg)
 
 
 
@@ -31,7 +31,7 @@ The NodeClassification/rewiring folder contains
    
 Datasets - Cora,Citeseer,Pubmed are automatically downloaded from Pytorch-Geometric. 
 
-Cornell,Texas,Wisconsin,Chameleon,Squirrel and Actor datasets we use the .npz files given here - https://github.com/yandex-research/heterophilous-graphs
+For Cornell, Texas, Wisconsin, Chameleon, Squirrel and Actor we use the .npz files given here - https://github.com/yandex-research/heterophilous-graphs
 
 For generating results for large heterophilic graphs -
 1. Download the code base - https://github.com/yandex-research/heterophilous-graphs
