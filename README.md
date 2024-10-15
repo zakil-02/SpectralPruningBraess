@@ -1,12 +1,12 @@
 # Code base for "Spectral Graph Pruning Against Over-squashing and Over-smoothing", which is now accepted at NeurIPS 2024!
 
-We propose a computationally efficient proxy spectral gap based graph rewiring strategy inspired by the Braess Paradox to show we can alleviate both over-squashing and over-smoothing in graph neural networks!
+>Message Passing Graph Neural Networks are known to suffer from two problems that are sometimes believed to be diametrically opposed: over-squashing and over-smoothing. The former results from topological bottlenecks that hamper the information flow from distant nodes and are mitigated by spectral gap maximization, primarily, by means of edge additions. However, such additions often promote over-smoothing that renders nodes of different classes less distinguishable. Inspired by the Braess phenomenon, we argue that deleting edges can address over-squashing and over-smoothing simultaneously. This insight explains how edge deletions can improve generalization, thus connecting spectral gap optimization to a seemingly disconnected objective of reducing computational resources by pruning graphs for lottery tickets. To this end, we propose a computationally effective spectral gap optimization framework to add or delete edges and demonstrate its effectiveness on the long range graph benchmark and on larger heterophilous datasets.
 
 ![](https://github.com/AdarshMJ/SpectralPruningBraess/blob/main/BraessRing.jpg)
 
 
 
-
+## Requirements
 The basic library requirements for reproducing results are listed below. 
 
 ```Python
@@ -18,6 +18,7 @@ Alternatively, we also provide the environment.yml for the exact environment req
 
 To run the code -
 
+## Structure of the code
 ```bash
 bash gen_spect.sh
 ```
@@ -42,7 +43,7 @@ For generating results for large heterophilic graphs -
 
 If you found this paper interesting and the code base helpful please consider citing :
 
-
+## Citation
 ```bibtex
 @inproceedings{jamadandi2024spectral,
 title={Spectral Graph Pruning Against Over-Squashing and Over-Smoothing},
