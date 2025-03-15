@@ -2,7 +2,7 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description='Run NodeClassification+Rewiring script')
     parser.add_argument('--method', type=str, help='Max/Min/Add/Delete/FoSR/SDRF')
-    parser.add_argument('--dataset', type=str, help='Dataset to download')
+    parser.add_argument('--dataset', type=str, default='Cora', help='Dataset to download')
     parser.add_argument('--num_layers', type=int, default=1, help='Number of layers in GCN')
     parser.add_argument('--model', type=str, default='SimpleGCN', choices=['GCN', 'GATv2','SimpleGCN'], help='Model to use')
     parser.add_argument('--num_heads', type=int, default=8, help='Number of heads in GATv2')

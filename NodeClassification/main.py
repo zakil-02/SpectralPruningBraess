@@ -109,7 +109,10 @@ elif args.dataset in ['chameleon_filtered.npz','squirrel_filtered.npz','actor.np
     num_features = data.num_features
     num_classes = data.num_classes
     print("Done!..")
-    
+
+else:
+    print("Invalid Dataset")
+    sys.exit()
 num_train_nodes = data.train_mask.sum().item()
 num_val_nodes = data.val_mask.sum().item()
 num_test_nodes = data.test_mask.sum().item()
