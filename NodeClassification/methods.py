@@ -136,7 +136,7 @@ def proxydelmax(data, nxgraph,seed, max_iterations):
     #         else:
     #             diff_class_diff_community_before += 1
     start_algo = time.time()
-    newgraph = process_and_update_edges(nxgraph, rank_by_proxy_delete, "proxydeletemax",seed, max_iter=max_iterations, updating_period=1)
+    newgraph = process_and_update_edges(nxgraph, rank_by_proxy_delete, "proxydeletemax", max_iter=max_iterations, updating_period=1) #we had a seed passed here, but we dont use it in the function.
     newgraph.remove_edges_from(list(nx.selfloop_edges(newgraph)))
     end_algo = time.time()
     # Track the edges after deletion

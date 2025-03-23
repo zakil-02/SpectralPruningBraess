@@ -83,6 +83,36 @@ elif args.dataset in ['cornell.npz','texas.npz','wisconsin.npz']:
     num_classes = data.num_classes
     print("Done!..")
 
+# -------------------New Datasets for review experiment -------------------
+elif args.dataset in ['amazon_ratings.npz']:  #here we add large heterophilic datasets to do my review experiment
+    path = 'NodeClassification/heterophilous-graphs/data'
+    filepath = os.path.join(path, args.dataset)
+    data = np.load(filepath)
+    print(data)
+    print("Converting to PyG dataset...")
+    x = torch.tensor(data['node_features'], dtype=torch.float)
+    y = torch.tensor(data['node_labels'], dtype=torch.long)
+    edge_index = torch.tensor(data['edges'], dtype=torch.long).t().contiguous()
+    train_mask = torch.tensor(data['train_masks'], dtype=torch.bool).transpose(0, 1).contiguous()
+    val_mask = torch.tensor(data['val_masks'], dtype=torch.bool).transpose(0, 1).contiguous()
+    test_mask = torch.tensor(data['test_masks'], dtype=torch.bool).transpose(0, 1).contiguous()
+    num_classes = len(torch.unique(y))
+    data = Data(x=x, edge_index=edge_index, y=y, train_mask=train_mask, val_mask=val_mask, test_mask=test_mask)
+    data.num_classes = num_classes
+    print(f"Selecting the LargestConnectedComponent..")
+    transform = LargestConnectedComponents()
+    data = transform(data)
+    print()
+    print("Splitting the new datasets into train/val/test...")
+    #transform2 = RandomNodeSplit(split="test_rest",num_splits=100,num_test =0.2,num_val = 0.2)
+    transform2 = RandomNodeSplit(split="train_rest",num_splits=100,num_test=0.2,num_val=0.2)
+    data  = transform2(data)
+    print(data)
+    num_features = data.num_features
+    num_classes = data.num_classes
+    print("Done!..")
+# --------------------------------------------------------- -------------------
+
 elif args.dataset in ['chameleon_filtered.npz','squirrel_filtered.npz','actor.npz']:
     path = '/home/heterophilous-graphs/data/'
     filepath = os.path.join(path, args.dataset)
