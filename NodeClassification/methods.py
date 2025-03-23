@@ -236,7 +236,7 @@ def proxyaddmax(data, nxgraph, seed,max_iterations):
     #         else:
     #             diff_class_diff_community_before += 1
     start_algo = time.time()
-    newgraph = process_and_update_edges(nxgraph, rank_by_proxy_add, "proxyaddmax",seed, max_iter=max_iterations, updating_period=1)
+    newgraph = process_and_update_edges(nxgraph, rank_by_proxy_add, "proxyaddmax", max_iter=max_iterations, updating_period=1)
     newgraph.remove_edges_from(list(nx.selfloop_edges(newgraph)))
     end_algo = time.time()
     # Track the edges after addition

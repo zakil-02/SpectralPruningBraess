@@ -47,7 +47,11 @@ def train_and_get_results(data, model, p, lr, seed, splits, weight_decay=5e-4):
             out= model(data.x, data.edge_index,p)
             pred = out.argmax(dim=1)  # Use the class with highest probability. 
             test_correct = pred[test_mask] == data.y[test_mask]  # Check against ground-truth labels.
-            test_acc = int(test_correct.sum()) / int(test_mask.sum())  # Derive ratio of correct predictions.
+            # test_acc = int(test_correct.sum()) / int(test_mask.sum())  # Derive ratio of correct predictions.
+            if test_mask.sum() != 0:
+                test_acc = int(test_correct.sum()) / int(test_mask.sum())  # Derive ratio of correct predictions.
+            else:
+                test_acc = int(test_correct.sum())
             return test_acc
 
     test_acc_allsplits = []

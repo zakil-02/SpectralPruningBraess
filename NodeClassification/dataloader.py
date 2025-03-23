@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from torch_geometric.data import Data
 from torch_geometric.transforms import RandomNodeSplit
-from torch_geometric.datasets import TUDataset, Planetoid,WebKB,Actor, WikipediaNetwork, Coauthor, EmailEUCore,Amazon,HeterophilousGraphDataset
+from torch_geometric.datasets import TUDataset, Planetoid,WebKB,Actor, WikipediaNetwork, Coauthor, EmailEUCore,Amazon,HeterophilousGraphDataset, LRGBDataset
 from torch_geometric.transforms import NormalizeFeatures, LargestConnectedComponents
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -83,6 +83,21 @@ def load_data(datasetname,num_train,num_val):
             #data = data.to(device)
             print(data)
 
+        elif datasetname in ['COCO-SP']:
+            dataset = LRGBDataset(root=path, name=datasetname,transform=NormalizeFeatures())
+            data = dataset[0]
+            num_features = dataset.num_features
+            num_classes = dataset.num_classes
+            print(f"Selecting the LargestConnectedComponent..")
+            transform = LargestConnectedComponents()
+            data = transform(dataset[0])
+            print()
+            print("Splitting datasets train/val/test...")
+            #transform2 = RandomNodeSplit(split="test_rest",num_splits=100,num_train_per_class = 200)
+            transform2 = RandomNodeSplit(split="test_rest",num_splits=100, num_val=0.2,num_test=0.2)
+            data  = transform2(data)
+            #data = data.to(device)
+            print(data)
 
         elif datasetname in ['Roman-empire','Minesweeper']:
             dataset = HeterophilousGraphDataset(root=path, name=datasetname,transform=NormalizeFeatures())

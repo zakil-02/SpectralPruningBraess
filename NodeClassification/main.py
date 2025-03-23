@@ -54,6 +54,9 @@ print(f"Loading the dataset...")
 if args.dataset in ['Cora','Citeseer','Pubmed','CS','Physics','Computers','Photo']:
       data, num_classes,num_features = load_data(args.dataset,args.num_train,args.num_val)
       print(data)
+elif args.dataset in ['COCO-SP']:
+      data, num_classes,num_features = load_data(args.dataset,args.num_train,args.num_val)
+      print(data)
 
 elif args.dataset in ['cornell.npz','texas.npz','wisconsin.npz']:
     path = '/home/heterophilous-graphs/data/'
@@ -84,7 +87,7 @@ elif args.dataset in ['cornell.npz','texas.npz','wisconsin.npz']:
     print("Done!..")
 
 # -------------------New Datasets for review experiment -------------------
-elif args.dataset in ['amazon_ratings.npz']:  #here we add large heterophilic datasets to do my review experiment
+elif args.dataset in ['amazon_ratings.npz', 'tolokers.npz']:  #here we add large heterophilic datasets to do my review experiment
     path = 'NodeClassification/heterophilous-graphs/data'
     filepath = os.path.join(path, args.dataset)
     data = np.load(filepath)
@@ -159,7 +162,7 @@ initialgap, _, _, _ = spectral_gap(nxgraph)
 print(f"InitialGap = {initialgap}")
 print()
 
-
+newdata,fgap, data_modifying, same_class_edges, diff_class_edges, nmiscoremod, same_class_same_community_after, same_class_diff_community_after, diff_class_same_community_after, diff_class_diff_community_after, same_class_same_community_before, same_class_diff_community_before, diff_class_same_community_before, diff_class_diff_community_before = 0,0,0,0,0,0,0,0,0,0,0,0,0,0
 if args.method == 'proxydelmin':
   newdata,fgap, data_modifying, same_class_edges, diff_class_edges, nmiscoremod, same_class_same_community_after, same_class_diff_community_after, diff_class_same_community_after, diff_class_diff_community_after, same_class_same_community_before, same_class_diff_community_before, diff_class_same_community_before, diff_class_diff_community_before  = methods.proxydelmin(data, nxgraph, seed,args.max_iters)
   data.edge_index = torch.cat([newdata.edge_index])
